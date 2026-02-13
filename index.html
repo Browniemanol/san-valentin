@@ -135,7 +135,6 @@
     .music-control:hover {
       transform: scale(1.1);
     }
-    /* Corazones cayendo animados */
     .heart-falling {
       position: fixed;
       top: -3em;
@@ -150,7 +149,6 @@
         opacity: 0.12;
       }
     }
-    /* Confeti/Corazones */
     .confeti-emoji {
       position: fixed;
       pointer-events: none;
@@ -164,7 +162,6 @@
         opacity: 0;
       }
     }
-    /* Responsive */
     @media (max-width: 540px) {
       .container {padding: 8vw 2vw;}
       .poema {font-size: .98rem;}
@@ -175,13 +172,12 @@
 </head>
 <body>
 
-  <!-- Audio element - se reproduce automáticamente con muted para bypass autoplay -->
-  <audio id="musica" loop autoplay muted>
-    <source src="https://limewire.com/d/yhRhz#vvjicHtp6z" type="audio/mpeg">
+  <!-- Audio element con tu MP3 de Catbox -->
+  <audio id="musica" loop preload="auto">
+    <source src="https://files.catbox.moe/27g6pc.mp3" type="audio/mpeg">
   </audio>
 
   <div class="container">
-    <!-- Galería/fotos múltiples tipo carrusel -->
     <div class="galeria">
       <img id="galeria-foto" class="galeria-foto" src="https://i.ibb.co/d4cpBWYD/foto1.jpg" alt="Foto juntos">
       <div class="galeria-controles">
@@ -204,17 +200,15 @@
     <div class="respuesta" id="respuesta"></div>
   </div>
 
-  <!-- Botón para controlar música -->
-  <button class="music-control" id="musicBtn" onclick="toggleMusic()" title="Controlar música">🔊</button>
+  <button class="music-control" id="musicBtn" onclick="toggleMusic()" title="Controlar música">🎵</button>
 
   <script>
     let musicPlaying = false;
     const audio = document.getElementById('musica');
 
-    // Reproducir música con sonido cuando hay interacción
+    // Reproducir música al hacer click en cualquier parte
     document.addEventListener('click', () => {
       if (!musicPlaying) {
-        audio.muted = false;
         audio.play().then(() => {
           musicPlaying = true;
           document.getElementById('musicBtn').textContent = '🔊';
@@ -224,19 +218,6 @@
       }
     }, { once: true });
 
-    // Intentar reproducir música automáticamente después de 2 segundos
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        audio.muted = false;
-        audio.play().then(() => {
-          musicPlaying = true;
-          document.getElementById('musicBtn').textContent = '🔊';
-        }).catch(() => {
-          console.log('Autoplay bloqueado. Click en cualquier lugar para activar música');
-        });
-      }, 2000);
-    });
-
     // Toggle música con botón
     function toggleMusic() {
       if (musicPlaying) {
@@ -244,14 +225,15 @@
         document.getElementById('musicBtn').textContent = '🔇';
         musicPlaying = false;
       } else {
-        audio.muted = false;
-        audio.play();
-        document.getElementById('musicBtn').textContent = '🔊';
-        musicPlaying = true;
+        audio.play().then(() => {
+          document.getElementById('musicBtn').textContent = '🔊';
+          musicPlaying = true;
+        }).catch(err => {
+          console.log('Error:', err);
+        });
       }
     }
 
-    // Galería de fotos
     const fotos = [
       'https://i.ibb.co/d4cpBWYD/foto1.jpg',
       'https://i.ibb.co/SXQPM7NK/foto2.jpg',
@@ -266,7 +248,6 @@
       document.getElementById('galeria-foto').src = fotos[idxFoto];
     }
 
-    // Cuenta regresiva
     function updateCountdown() {
       const target = new Date('2026-02-14T00:00:00');
       const now = new Date();
@@ -283,7 +264,6 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // Corazones cayendo animados
     function crearCorazon() {
       const corazon = document.createElement('div');
       corazon.className = 'heart-falling';
@@ -296,7 +276,6 @@
     }
     setInterval(crearCorazon, 410);
 
-    // Confeti mejorado
     function lanzarConfeti() {
       const emojis = ['💜', '💖', '💟', '💕', '💞', '🎉', '✨', '🌹'];
       for(let i = 0; i < 60; i++){
@@ -314,14 +293,11 @@
       }
     }
 
-    // Respuesta romántica
     function responder(mensaje) {
       document.getElementById('respuesta').innerHTML = mensaje + "<br>¡Te amo! Gracias por ser mi San Valentín. 💜";
       lanzarConfeti();
       
-      // Asegurarse de que la música está sonando
       if (!musicPlaying) {
-        audio.muted = false;
         audio.play();
         musicPlaying = true;
         document.getElementById('musicBtn').textContent = '🔊';
