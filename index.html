@@ -116,7 +116,7 @@
       min-height: 38px;
       transition: all .17s;
     }
-    .play-music-btn {
+    .music-control {
       position: fixed;
       bottom: 20px;
       right: 20px;
@@ -132,7 +132,7 @@
       transition: transform .2s;
       z-index: 100;
     }
-    .play-music-btn:hover {
+    .music-control:hover {
       transform: scale(1.1);
     }
     /* Corazones cayendo animados */
@@ -169,11 +169,16 @@
       .container {padding: 8vw 2vw;}
       .poema {font-size: .98rem;}
       .galeria-foto {width: 37vw; height: 37vw; max-width: 210px;}
-      .play-music-btn {width: 50px; height: 50px; font-size: 1.2rem; bottom: 15px; right: 15px;}
+      .music-control {width: 50px; height: 50px; font-size: 1.2rem; bottom: 15px; right: 15px;}
     }
   </style>
 </head>
 <body>
+
+  <!-- Audio element - se reproduce automáticamente con muted para bypass autoplay -->
+  <audio id="musica" loop autoplay muted>
+    <source src="https://limewire.com/d/yhRhz#vvjicHtp6z" type="audio/mpeg">
+  </audio>
 
   <div class="container">
     <!-- Galería/fotos múltiples tipo carrusel -->
@@ -199,29 +204,54 @@
     <div class="respuesta" id="respuesta"></div>
   </div>
 
-  <!-- Botón flotante para reproducir música -->
-  <button class="play-music-btn" id="musicBtn" onclick="playMusic()" title="Click para música 🎵">🎵</button>
+  <!-- Botón para controlar música -->
+  <button class="music-control" id="musicBtn" onclick="toggleMusic()" title="Controlar música">🔊</button>
 
   <script>
     let musicPlaying = false;
+    const audio = document.getElementById('musica');
 
-    // Función para reproducir música de YouTube
-    function playMusic() {
+    // Reproducir música con sonido cuando hay interacción
+    document.addEventListener('click', () => {
       if (!musicPlaying) {
-        // Crear iframe de YouTube dinámicamente
-        const iframe = document.createElement('iframe');
-        iframe.src = 'https://www.youtube.com/embed/450p7goxZqg?autoplay=1&controls=0&loop=1&playlist=450p7goxZqg';
-        iframe.allow = 'autoplay';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-        
+        audio.muted = false;
+        audio.play().then(() => {
+          musicPlaying = true;
+          document.getElementById('musicBtn').textContent = '🔊';
+        }).catch(err => {
+          console.log('Error al reproducir:', err);
+        });
+      }
+    }, { once: true });
+
+    // Intentar reproducir música automáticamente después de 2 segundos
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        audio.muted = false;
+        audio.play().then(() => {
+          musicPlaying = true;
+          document.getElementById('musicBtn').textContent = '🔊';
+        }).catch(() => {
+          console.log('Autoplay bloqueado. Click en cualquier lugar para activar música');
+        });
+      }, 2000);
+    });
+
+    // Toggle música con botón
+    function toggleMusic() {
+      if (musicPlaying) {
+        audio.pause();
+        document.getElementById('musicBtn').textContent = '🔇';
+        musicPlaying = false;
+      } else {
+        audio.muted = false;
+        audio.play();
         document.getElementById('musicBtn').textContent = '🔊';
-        document.getElementById('musicBtn').style.background = 'linear-gradient(90deg, #9b59b6 0%, #c57bc5 100%)';
         musicPlaying = true;
       }
     }
 
-    // Galería de fotos con enlaces de ImgBB
+    // Galería de fotos
     const fotos = [
       'https://i.ibb.co/d4cpBWYD/foto1.jpg',
       'https://i.ibb.co/SXQPM7NK/foto2.jpg',
@@ -266,7 +296,7 @@
     }
     setInterval(crearCorazon, 410);
 
-    // Confeti/corazones al aceptar - MEJORADO
+    // Confeti mejorado
     function lanzarConfeti() {
       const emojis = ['💜', '💖', '💟', '💕', '💞', '🎉', '✨', '🌹'];
       for(let i = 0; i < 60; i++){
@@ -288,9 +318,13 @@
     function responder(mensaje) {
       document.getElementById('respuesta').innerHTML = mensaje + "<br>¡Te amo! Gracias por ser mi San Valentín. 💜";
       lanzarConfeti();
-      // También reproducir música si no está tocando
+      
+      // Asegurarse de que la música está sonando
       if (!musicPlaying) {
-        playMusic();
+        audio.muted = false;
+        audio.play();
+        musicPlaying = true;
+        document.getElementById('musicBtn').textContent = '🔊';
       }
     }
   </script>
