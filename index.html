@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>¿Quieres ser mi San Valentín?</title>
+  <style>
+    body {
+      background: linear-gradient(120deg, #ede0f7 0%, #e4d3ee 100%);
+      color: #693275;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 480px;
+      margin: 48px auto;
+      background: #fff6fded;
+      border-radius: 28px;
+      box-shadow: 0 7px 36px #be93d1c7;
+      padding: 52px 39px 38px 39px;
+      text-align: center;
+      position: relative;
+    }
+    .galeria {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 0;
+    }
+    .galeria-foto {
+      width: 185px;
+      height: 185px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid #cba0db;
+      background: #eee1ff;
+      box-shadow: 0 2px 20px #b389da3b;
+      margin-bottom: 9px;
+      transition: box-shadow .23s;
+    }
+    .galeria-controles {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 9px;
+    }
+    .galeria-btn {
+      background: #d1b3e0;
+      color: #613483;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 1.45rem;
+      cursor: pointer;
+      transition: background .21s;
+    }
+    .galeria-btn:hover {
+      background: #baa0ce;
+    }
+    h1 {
+      margin: 8px 0 6px 0;
+      font-size: 2rem;
+      letter-spacing: 1.5px;
+      color: #77408f;
+    }
+    .poema {
+      font-size: 1.08rem;
+      margin-bottom: 20px;
+      color: #ae4788;
+      font-style: italic;
+      background: #f3e7fdcc;
+      padding: 11px 17px 11px 17px;
+      border-radius: 17px;
+      box-shadow: 0 2px 12px #e2bdf933;
+    }
+    .countdown {
+      margin: 10px 0 18px 0;
+      font-size: 1.08rem;
+      color: #c298c4;
+      background: #f6eafd;
+      border-radius: 12px;
+      padding: 7px 18px;
+      display: inline-block;
+    }
+    .botones {
+      display: flex;
+      justify-content: center;
+      gap: 13px;
+      margin: 17px 0 0 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: linear-gradient(90deg, #c57bc5 0%, #9b59b6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 22px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background .23s, transform .13s;
+      margin-bottom: 12px;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #f3e7fd 0%, #a077c4 100%);
+      color: #613483;
+      transform: scale(1.06);
+    }
+    .respuesta {
+      margin-top: 30px;
+      font-size: 1.13rem;
+      color: #398c6d;
+      min-height: 38px;
+      transition: all .17s;
+    }
+    /* Corazones cayendo animados */
+    .heart-falling {
+      position: fixed;
+      top: -3em;
+      z-index: 30;
+      font-size: 34px;
+      pointer-events: none;
+      animation: hearts-fall linear forwards;
+    }
+    @keyframes hearts-fall {
+      to {
+        transform: translateY(120vh) rotateZ(30deg);
+        opacity: 0.12;
+      }
+    }
+    /* Confeti */
+    .confetti {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      opacity: 0.77;
+      z-index: 99;
+      pointer-events: none;
+      animation: confetti-fall 2.6s linear forwards;
+    }
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(105vh);
+        opacity: 0.28;
+      }
+    }
+    /* Responsive */
+    @media (max-width: 540px) {
+      .container {padding: 8vw 2vw;}
+      .poema {font-size: .98rem;}
+      .galeria-foto {width: 37vw; height: 37vw; max-width: 210px;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Reproductor de YouTube música de fondo -->
+  <div style="position:fixed; left:-99999px; top:-99999px;">
+    <iframe id="youtube" src="https://www.youtube.com/embed/450p7goxZqg?autoplay=1&loop=1&playlist=450p7goxZqg" 
+      frameborder="0" allow="autoplay" allowfullscreen width="0" height="0"></iframe>
+  </div>
+
+  <div class="container">
+    <!-- Galería/fotos múltiples tipo carrusel -->
+    <div class="galeria">
+      <img id="galeria-foto" class="galeria-foto" src="https://i.ibb.co/d4cpBWYD/foto1.jpg" alt="Foto juntos">
+      <div class="galeria-controles">
+        <button class="galeria-btn" onclick="cambiarFoto(-1)" aria-label="Anterior">‹</button>
+        <button class="galeria-btn" onclick="cambiarFoto(1)" aria-label="Siguiente">›</button>
+      </div>
+    </div>
+    <h1>¿Quieres ser mi San Valentín?</h1>
+    <div class="poema" id="poema">
+      "Cada día contigo es un día especial. <br>
+      Permíteme seguir siendo tu San Valentín, hoy y siempre."
+    </div>
+    <div class="countdown" id="countdown"></div>
+    <div class="botones">
+      <button class="btn" onclick="responder('¡Sí, mi amor!')">¡Sí!</button>
+      <button class="btn" onclick="responder('¡Por supuesto!')">¡Por supuesto!</button>
+      <button class="btn" onclick="responder('¡Mil veces sí!')">¡Mil veces sí!</button>
+      <button class="btn" onclick="responder('¿Lo dudabas? ❤️')">¿Lo dudabas?</button>
+    </div>
+    <div class="respuesta" id="respuesta"></div>
+  </div>
+
+  <script>
+    // Galería de fotos con enlaces de ImgBB
+    const fotos = [
+      'https://i.ibb.co/d4cpBWYD/foto1.jpg',
+      'https://i.ibb.co/SXQPM7NK/foto2.jpg',
+      'https://i.ibb.co/nNBgs6D8/foto3.jpg',
+      'https://i.ibb.co/k2t48wZ7/foto4.jpg'
+    ];
+    let idxFoto = 0;
+    function cambiarFoto(d) {
+      idxFoto += d;
+      if (idxFoto < 0) idxFoto = fotos.length - 1;
+      if (idxFoto >= fotos.length) idxFoto = 0;
+      document.getElementById('galeria-foto').src = fotos[idxFoto];
+    }
+
+    // Cuenta regresiva
+    function updateCountdown() {
+      const target = new Date('2026-02-14T00:00:00');
+      const now = new Date();
+      let diff = (target - now) / 1000;
+      if(diff < 0) { document.getElementById('countdown').innerText = "¡Ya es San Valentín!"; return;}
+      let d = Math.floor(diff / 86400);
+      diff -= d*86400;
+      let h = Math.floor(diff / 3600);
+      diff -= h*3600;
+      let m = Math.floor(diff / 60);
+      let s = Math.floor(diff - m*60);
+      document.getElementById('countdown').innerText = `Faltan ${d} días, ${h} horas, ${m} minutos y ${s} segundos para San Valentín 💜`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Corazones cayendo animados
+    function crearCorazon() {
+      const corazon = document.createElement('div');
+      corazon.className = 'heart-falling';
+      corazon.innerText = ['💜','💖','💟','❤️','💕','💞'][Math.floor(Math.random()*6)];
+      corazon.style.left = Math.random() * 100 + 'vw';
+      corazon.style.fontSize = (32 + Math.random()*20) + "px";
+      corazon.style.animationDuration = (2.2 + Math.random()*2) + "s";
+      document.body.appendChild(corazon);
+      setTimeout(()=>corazon.remove(), 4200);
+    }
+    setInterval(crearCorazon, 410);
+
+    // Confeti/corazones al aceptar
+    function lanzarConfeti() {
+      for(let i=0; i<47; ++i){
+        setTimeout(()=>{
+          let confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = (Math.random()*99) + 'vw';
+          confetti.style.background = 'none';
+          confetti.innerText = ['💜','💖','💟','💕','💞'][Math.floor(Math.random()*5)];
+          confetti.style.fontSize = (23 + Math.random()*17) + "px";
+          document.body.appendChild(confetti);
+          setTimeout(()=>confetti.remove(), 2600);
+        }, Math.random()*1600);
+      }
+    }
+
+    // Respuesta romántica
+    function responder(mensaje) {
+      document.getElementById('respuesta').innerHTML = mensaje + "<br>¡Te amo! Gracias por ser mi San Valentín. 💜";
+      lanzarConfeti();
+    }
+  </script>
+</body>
+</html>
